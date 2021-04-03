@@ -10,7 +10,7 @@ time_table_drop = "DROP TABLE IF EXISTS dim_time"
 
 songplay_table_create = ("""
 CREATE TABLE IF NOT EXISTS fact_songplays (
-    songplay_id SERIAL PRIMARY KEY
+    songplay_id SERIAL PRIMARY KEY,
     start_time BIGINT,
     user_id INT,
     level VARCHAR(20),

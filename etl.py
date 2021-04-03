@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 from sql_queries import *
 # To deal with error: "can't adapt type 'numpy.int64'" when trying to insert list values with numpy.int64 data type
+# See this post: https://stackoverflow.com/questions/50626058/psycopg2-cant-adapt-type-numpy-int64
 from psycopg2.extensions import register_adapter, AsIs
 psycopg2.extensions.register_adapter(np.int64, psycopg2._psycopg.AsIs)
 
