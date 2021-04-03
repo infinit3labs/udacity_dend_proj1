@@ -2,42 +2,61 @@ import os
 import glob
 import psycopg2
 import pandas as pd
+import numpy as np
 from sql_queries import *
+# To deal with error: "can't adapt type 'numpy.int64'" when trying to insert list values with numpy.int64 data type
+from psycopg2.extensions import register_adapter, AsIs
+psycopg2.extensions.register_adapter(np.int64, psycopg2._psycopg.AsIs)
 
 
 def process_song_file(cur, filepath):
     # open song file
-    df = 
+    df = pd.read_json(filepath, lines=True)
+    
+    # Clean any blank cells to NaN to insert into database as NULL
+    df = df.replace(r'^\s*$', np.nan, regex=True)
+    
+    # Clean any invalid year values and convert to -1 (limit to exclude 3-digit years)
+    df.loc[df.year < 1000, 'year'] = -1
 
     # insert song record
-    song_data = 
+    song_data = df[['song_id', 'artist_id', 'title', 'year', 'duration']].loc[0].values.tolist()
     cur.execute(song_table_insert, song_data)
     
     # insert artist record
-    artist_data = 
+    artist_data = df[['artist_id', 'artist_name', 'artist_location', 'artist_latitude', 'artist_longitude']].loc[0].values.tolist()
     cur.execute(artist_table_insert, artist_data)
 
 
 def process_log_file(cur, filepath):
     # open log file
-    df = 
+    df = pd.read_json(filepath, lines=True)
 
     # filter by NextSong action
-    df = 
+    df = df[(df.page == 'NextSong')]
+    
+    # Add new columns to existing dataframe with time components
+    df['dt'] = pd.to_datetime(df.ts, unit='ms')
+    df['hour'] = df['dt'].dt.hour
+    df['day'] = df['dt'].dt.day
+    df['week'] = df['dt'].dt.isocalendar().week
+    df['month'] = df['dt'].dt.month
+    df['year'] = df['dt'].dt.year
+    df['weekday'] = df['dt'].dt.weekday
 
-    # convert timestamp column to datetime
-    t = 
+    # Create new dataframe with only required time columns
+    t = df[['ts', 'hour', 'day', 'week', 'month', 'year', 'weekday']]
     
     # insert time data records
-    time_data = 
-    column_labels = 
-    time_df = 
+    time_data = t.values.tolist()
+    column_labels = ['start_time', 'hour', 'day', 'week', 'month', 'year', 'weekday']
+    time_df = pd.DataFrame(time_data, columns=column_labels)
 
     for i, row in time_df.iterrows():
         cur.execute(time_table_insert, list(row))
 
     # load user table
-    user_df = 
+    user_df = df[['userId', 'firstName', 'lastName', 'gender', 'level']]
 
     # insert user records
     for i, row in user_df.iterrows():
@@ -56,7 +75,16 @@ def process_log_file(cur, filepath):
             songid, artistid = None, None
 
         # insert songplay record
-        songplay_data = 
+        songplay_data = (
+            row.ts,
+            row.userId,
+            row.level,
+            songid,
+            artistid,
+            row.sessionId,
+            row.location,
+            row.userAgent
+        ) 
         cur.execute(songplay_table_insert, songplay_data)
 
 
