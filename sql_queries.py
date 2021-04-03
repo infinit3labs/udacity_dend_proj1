@@ -10,57 +10,57 @@ time_table_drop = "DROP TABLE IF EXISTS dim_time"
 
 songplay_table_create = ("""
 CREATE TABLE IF NOT EXISTS fact_songplays (
-    start_time bigint,
-    user_id int,
-    level varchar(20),
-    song_id varchar(18),
-    artist_id varchar(18),
-    session_id int,
-    location varchar(100),
-    user_agent varchar(250),
-    PRIMARY KEY (start_time, user_id, song_id)
+    songplay_id SERIAL PRIMARY KEY
+    start_time BIGINT,
+    user_id INT,
+    level VARCHAR(20),
+    song_id VARCHAR(18),
+    artist_id VARCHAR(18),
+    session_id INT,
+    location VARCHAR(100),
+    user_agent VARCHAR(250)
 )
 """)
 
 user_table_create = ("""
 CREATE TABLE IF NOT EXISTS dim_users (
-    user_id int primary key,
-    first_name varchar(20),
-    last_name varchar(20),
-    gender varchar(1),
-    level varchar(20)
+    user_id int PRIMARY KEY,
+    first_name VARCHAR(20),
+    last_name VARCHAR(20),
+    gender VARCHAR(1),
+    level VARCHAR(20)
 )
 """)
 
 song_table_create = ("""
 CREATE TABLE IF NOT EXISTS dim_songs (
-    song_id varchar(18) primary key,
-    artist_id varchar(18),
-    title varchar(100),
-    year int,
-    duration float
+    song_id VARCHAR(18) PRIMARY KEY,
+    artist_id VARCHAR(18),
+    title VARCHAR(100),
+    year INT,
+    duration FLOAT
 )
 """)
 
 artist_table_create = ("""
 CREATE TABLE IF NOT EXISTS dim_artists (
-    artist_id varchar(18) primary key,
-    name varchar(150),
-    location varchar(50),
-    latitude float,
-    longitude float
+    artist_id VARCHAR(18) PRIMARY KEY,
+    name VARCHAR(150),
+    location VARCHAR(50),
+    latitude FLOAT,
+    longitude FLOAT
 )
 """)
 
 time_table_create = ("""
 CREATE TABLE IF NOT EXISTS dim_time (
-    start_time bigint primary key,
-    hour int,
-    day int,
-    week int,
-    month int,
-    year int,
-    weekday int
+    start_time BIGINT primary key,
+    hour INT,
+    day INT,
+    week INT,
+    month INT,
+    year INT,
+    weekday INT
 )
 """)
 
