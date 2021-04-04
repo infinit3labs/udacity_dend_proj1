@@ -112,10 +112,9 @@ ON CONFLICT (start_time) DO NOTHING
 song_select = ("""
 SELECT sp.song_id,
        sp.artist_id
-FROM fact_songplays sp
-JOIN dim_songs s ON sp.song_id = s.song_id
-JOIN dim_artists a ON sp.artist_id = a.artist_id
-WHERE sp.song_id = %s
+FROM dim_songs s
+JOIN dim_artists a ON s.artist_id = a.artist_id
+WHERE s.title = %s
   AND a.name = %s
   AND s.duration = %s
 """)
