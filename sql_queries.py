@@ -110,8 +110,8 @@ ON CONFLICT (start_time) DO NOTHING
 # FIND SONGS
 
 song_select = ("""
-SELECT sp.song_id,
-       sp.artist_id
+SELECT s.song_id,
+       a.artist_id
 FROM dim_songs s
 JOIN dim_artists a ON s.artist_id = a.artist_id
 WHERE s.title = %s
