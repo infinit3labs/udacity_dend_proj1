@@ -8,7 +8,12 @@ The project repository contains the following files.  A description is added abo
 
 * data: this is a folder containing the source files to populate the database
 * create_tables.py: this is a Python script to set up the Sparkify database and configure the tables as required (and drops these objects if they already exist)
-* 
+* etl.py: this is a Python script to process the source files and load data into the database (its function is described below)
+* sql_queries.py: this is a Python script with the various SQL queries used by the create_tables.py file and etl.py file
+
+## Instructions
+1) Run the create_tables.py script with no errors to set up the environment
+2) 
 
 ## Database Schema Design
 The database uses a star schema to optimise the read-heavy analytics queries of Sparkify business users.
