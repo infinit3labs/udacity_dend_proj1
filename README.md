@@ -12,8 +12,9 @@ The project repository contains the following files.  A description is added abo
 * sql_queries.py: this is a Python script with the various SQL queries used by the create_tables.py file and etl.py file
 
 ## Instructions
-1) Run the create_tables.py script with no errors to set up the environment
-2) 
+1) Ensure source data is loaded as JSON within the data folder (song data within 'song_data' and log data within 'log_data')
+2) Run the create_tables.py script with no errors to set up the environment
+3) Run the etl.py script with no errors (there should be 30 log files and 72 song files)
 
 ## Database Schema Design
 The database uses a star schema to optimise the read-heavy analytics queries of Sparkify business users.
