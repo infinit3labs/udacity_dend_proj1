@@ -11,6 +11,17 @@ psycopg2.extensions.register_adapter(np.int64, psycopg2._psycopg.AsIs)
 
 
 def process_song_file(cur, filepath):
+    """
+    Loads a JSON file at 'filepath' to a dataframe for processing song data.
+
+    The function performs some basic cleaning of the dataframe before extracting attributes to inserting
+    into dim_songs and dim_artists.
+
+    :param cur: The database cursor object.
+    :param filepath: The filepath to a JSON file.
+    :return: None.
+    """
+    
     # open song file
     df = pd.read_json(filepath, lines=True)
     
@@ -30,6 +41,19 @@ def process_song_file(cur, filepath):
 
 
 def process_log_file(cur, filepath):
+    """
+    Loads a JSON file at 'filepath' to a dataframe for processing log data.
+
+    The function extracts attributes for inserting into dim_time and dim_users and fact_songplays.
+    Prior to inserting into fact_songplays, the function queries dim_songs and dim_artists to obtain the song_id
+    and artist_id.
+    Time attributes for dim_time are extracted from the timestamp attribute in the source file.
+
+    :param cur: The database cursor object.
+    :param filepath: The filepath to a JSON file.
+    :return: None.
+    """
+    
     # open log file
     df = pd.read_json(filepath, lines=True)
 
@@ -40,7 +64,7 @@ def process_log_file(cur, filepath):
     df['dt'] = pd.to_datetime(df.ts, unit='ms')
     df['hour'] = df['dt'].dt.hour
     df['day'] = df['dt'].dt.day
-    df['week'] = df['dt'].dt.isocalendar().week
+    df['week'] = df['dt'].dt.week
     df['month'] = df['dt'].dt.month
     df['year'] = df['dt'].dt.year
     df['weekday'] = df['dt'].dt.weekday
@@ -90,6 +114,19 @@ def process_log_file(cur, filepath):
 
 
 def process_data(cur, conn, filepath, func):
+    """
+    Finds JSON files within the filepath and any sub-directories and iterates over this list using a function
+    passed to this function - 'func'.
+
+    The function reports to the user the progress of processing the files.
+
+    :param cur: The database cursor object.
+    :param conn: The database connection object.
+    :param filepath: The filepath to search for JSON files.
+    :param func: The function for processing the given source file.
+    :return: None.
+    """
+    
     # get all files matching extension from directory
     all_files = []
     for root, dirs, files in os.walk(filepath):
@@ -109,6 +146,19 @@ def process_data(cur, conn, filepath, func):
 
 
 def main():
+    """
+    Connects to the sparkify database and creates a connection and cursor object.
+
+    It passes these objects to the process_data function which then loads, transforms, and inserts the song and
+    log source files into the sparkify database.  It looks for data in two locations:
+     - song data: 'data/song_data'
+     - log data: 'data/log_data'
+
+    Finally, it closes the connection to the database.
+
+    :return: None.
+    """
+    
     conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=student password=student")
     cur = conn.cursor()
 

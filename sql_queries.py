@@ -11,41 +11,45 @@ time_table_drop = "DROP TABLE IF EXISTS dim_time"
 songplay_table_create = ("""
 CREATE TABLE IF NOT EXISTS fact_songplays (
     songplay_id SERIAL PRIMARY KEY,
-    start_time BIGINT,
-    user_id INT,
-    level VARCHAR(20),
+    start_time BIGINT NOT NULL,
+    user_id INT NOT NULL,
+    level VARCHAR(20) NOT NULL,
+    -- due to limitations with the source data the song_id and artist_id are not required
     song_id VARCHAR(18),
     artist_id VARCHAR(18),
-    session_id INT,
-    location VARCHAR(100),
-    user_agent VARCHAR(250)
+    session_id INT NOT NULL,
+    location VARCHAR(100) NOT NULL,
+    user_agent VARCHAR(250) NOT NULL
 )
 """)
 
 user_table_create = ("""
 CREATE TABLE IF NOT EXISTS dim_users (
     user_id int PRIMARY KEY,
-    first_name VARCHAR(20),
-    last_name VARCHAR(20),
+    first_name VARCHAR(20) NOT NULL,
+    last_name VARCHAR(20) NOT NULL,
+    -- user may not want to provide gender details so not required
     gender VARCHAR(1),
-    level VARCHAR(20)
+    level VARCHAR(20) NOT NULL
 )
 """)
 
 song_table_create = ("""
 CREATE TABLE IF NOT EXISTS dim_songs (
     song_id VARCHAR(18) PRIMARY KEY,
-    artist_id VARCHAR(18),
-    title VARCHAR(100),
+    artist_id VARCHAR(18) NOT NULL,
+    title VARCHAR(100) NOT NULL,
+    -- this field has data quality issues from source so is not required
     year INT,
-    duration FLOAT
+    duration FLOAT NOT NULL
 )
 """)
 
 artist_table_create = ("""
 CREATE TABLE IF NOT EXISTS dim_artists (
     artist_id VARCHAR(18) PRIMARY KEY,
-    name VARCHAR(150),
+    name VARCHAR(150) NOT NULL,
+    -- the following fields not required as they are sparsely populated in the source
     location VARCHAR(50),
     latitude FLOAT,
     longitude FLOAT
@@ -55,12 +59,12 @@ CREATE TABLE IF NOT EXISTS dim_artists (
 time_table_create = ("""
 CREATE TABLE IF NOT EXISTS dim_time (
     start_time BIGINT primary key,
-    hour INT,
-    day INT,
-    week INT,
-    month INT,
-    year INT,
-    weekday INT
+    hour INT NOT NULL,
+    day INT NOT NULL,
+    week INT NOT NULL,
+    month INT NOT NULL,
+    year INT NOT NULL,
+    weekday INT NOT NULL
 )
 """)
 
