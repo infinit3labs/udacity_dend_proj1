@@ -3,6 +3,13 @@ Sparkify is a new startup that provides a music streaming service.
 To analyse the use of their service, they capture logs of the application use.
 They would like to understand what songs users are listening to.
 
+## Repository Contents
+The project repository contains the following files.  A description is added about the purpose of each file.
+
+* data: this is a folder containing the source files to populate the database
+* create_tables.py: this is a Python script to set up the Sparkify database and configure the tables as required (and drops these objects if they already exist)
+* 
+
 ## Database Schema Design
 The database uses a star schema to optimise the read-heavy analytics queries of Sparkify business users.
 
